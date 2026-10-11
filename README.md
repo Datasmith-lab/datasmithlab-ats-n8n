@@ -37,4 +37,6 @@ Only selected career pages are scanned. Limits, filters, source access and ATS d
 
 ## Validation
 
-See the accompanying publication report for measured live results. Import compatibility and real delivery have been tested on self-hosted n8n 2.26.4; other versions and cloud instances require your own setup check. This package has not been accepted into the official n8n template directory.
+On 11 October 2026, two real Stripe snapshots and one actual schedule-triggered run each observed 10 jobs. Final Google Sheets API read-back verified 10 unique saved keys and zero duplicates; repeat runs added zero unseen IDs. Each execution launched one Actor. The source reported 728 open jobs, so this is a bounded sample, not a complete inventory or a full-scan zero-change cost test.
+
+Import compatibility and real delivery have been tested on self-hosted n8n 2.26.4; other versions and cloud instances require your own setup check. This package has not been accepted into the official n8n template directory.
