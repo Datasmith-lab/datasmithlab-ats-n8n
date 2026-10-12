@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://datasmith-lab.github.io/datasmithlab-ats-n8n/sitemap.xml

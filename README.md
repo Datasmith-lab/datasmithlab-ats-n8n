@@ -2,7 +2,7 @@
 
 An inactive starter from DataSmithLab. Collect a bounded snapshot of public career-page jobs and keep a deduplicated log in your own Google Sheet.
 
-[Career Page Jobs Scraper on Apify](https://apify.com/datasmithlab/ats-jobs-scraper) · [Walkthrough](https://datasmith-lab.github.io/datasmithlab-ats-n8n/) · [Download starter ZIP](https://github.com/Datasmith-lab/datasmithlab-ats-n8n/releases/latest/download/career-jobs-to-sheets-starter.zip)
+[Career Page Jobs Scraper on Apify](https://apify.com/datasmithlab/ats-jobs-scraper) · [Walkthrough](https://datasmith-lab.github.io/datasmithlab-ats-n8n/) · [SEO setup guide](https://datasmith-lab.github.io/datasmithlab-ats-n8n/track-career-page-jobs-google-sheets-apify-n8n.html) · [Download starter ZIP](https://github.com/Datasmith-lab/datasmithlab-ats-n8n/releases/latest/download/career-jobs-to-sheets-starter.zip)
 
 ## What it does
 

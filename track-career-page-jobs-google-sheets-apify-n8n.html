@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Track Career-Page Jobs with Apify &amp; n8n | DataSmithLab</title>
+  <meta name="description" content="Track selected company career-page jobs with Apify, n8n, and Google Sheets. Validate each run, use stable job IDs, and avoid duplicate rows.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <link rel="canonical" href="https://datasmith-lab.github.io/datasmithlab-ats-n8n/track-career-page-jobs-google-sheets-apify-n8n.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Track Career-Page Jobs with Apify and n8n">
+  <meta property="og:description" content="Build a validated, deduplicated job log in Google Sheets from selected public company career pages.">
+  <meta property="og:url" content="https://datasmith-lab.github.io/datasmithlab-ats-n8n/track-career-page-jobs-google-sheets-apify-n8n.html">
+  <meta name="twitter:card" content="summary">
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org",
+    "@type":"Article",
+    "headline":"Track Company Career-Page Jobs in Google Sheets with Apify and n8n",
+    "description":"Build a repeatable job-tracking workflow with Apify, n8n, and Google Sheets.",
+    "datePublished":"2026-10-12",
+    "dateModified":"2026-10-12",
+    "author":{"@type":"Organization","name":"DataSmithLab"},
+    "publisher":{"@type":"Organization","name":"DataSmithLab"},
+    "mainEntityOfPage":{"@type":"WebPage","@id":"https://datasmith-lab.github.io/datasmithlab-ats-n8n/track-career-page-jobs-google-sheets-apify-n8n.html"}
+  }
+  </script>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1119;--panel:#111c28;--text:#edf4fa;--muted:#b3c2d0;--line:#2b3a49;--accent:#ffd84a;--link:#8edcff}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:18px/1.72 system-ui,-apple-system,Segoe UI,sans-serif}
+    main{width:min(860px,100% - 40px);margin:0 auto;padding:48px 0 80px}a{color:var(--link);text-underline-offset:3px}a:hover{color:#fff}
+    .brand{font-size:13px;font-weight:800;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}.brand b{color:var(--accent)}
+    h1{max-width:760px;font-size:clamp(36px,7vw,62px);line-height:1.07;letter-spacing:-.035em;margin:30px 0 18px}
+    h2{font-size:clamp(24px,4vw,32px);line-height:1.2;letter-spacing:-.02em;margin:46px 0 12px}p,li{color:var(--muted)}strong{color:var(--text)}
+    .dek{font-size:21px;line-height:1.5;color:#d2dee8;max-width:730px}.meta{font-size:14px;color:var(--muted);margin-top:22px}
+    .callout{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--accent);padding:16px 20px;border-radius:10px;margin:28px 0}
+    .steps{padding-left:24px}.steps li{padding-left:5px;margin:10px 0}.links{display:flex;flex-wrap:wrap;gap:12px;margin:24px 0}.button{display:inline-block;padding:11px 15px;border-radius:8px;background:var(--accent);color:#121820;font-weight:750;text-decoration:none}.button.secondary{background:transparent;border:1px solid var(--line);color:var(--text)}
+    footer{margin-top:54px;border-top:1px solid var(--line);padding-top:20px;font-size:14px;color:var(--muted)}
+    @media(max-width:600px){main{width:min(100% - 28px,860px);padding-top:30px}.dek{font-size:18px}}
+  </style>
+</head>
+<body>
+<main>
+  <p class="brand"><b>DataSmithLab</b> · Apify + n8n + Google Sheets</p>
+  <article>
+    <header>
+      <h1>Track Company Career-Page Jobs in Google Sheets with Apify and n8n</h1>
+      <p class="dek">Build a repeatable job log from selected public career pages. Validate each source response before writing rows, then use stable job IDs to keep repeat runs tidy.</p>
+      <p class="meta">A practical setup guide for hiring teams, founders, and recruiting operations.</p>
+    </header>
+    <p>Hiring teams often watch several company career pages at once. Listings can live on different applicant-tracking systems, and checking every board by hand makes changes easy to miss. This Apify and n8n workflow collects a bounded snapshot of public listings and stores a consistent job log in Google Sheets.</p>
+    <div class="callout"><strong>Scope:</strong> this workflow tracks selected boards. Source access, company configuration, filters, and row limits determine what each run can return; it is not a complete census of every open job.</div>
+
+    <h2>What the workflow does</h2>
+    <p>The starter reads an existing <code>Jobs</code> tab, starts one run of the Career Page Jobs Scraper on Apify, and waits for that run to finish. Before it writes anything, n8n checks the run status, the <code>HEALTH</code> and <code>COMPANIES</code> reports, and the dataset count. If a response is incomplete or inconsistent, the workflow stops before updating Google Sheets.</p>
+    <p>Accepted results are upserted using a stable key built from the input scope and job ID. Repeat observations update the matching row instead of creating a duplicate. The first snapshot establishes a baseline; later unseen IDs are logged with a first-seen timestamp.</p>
+
+    <h2>Workday and other ATS boards</h2>
+    <p>The Actor supports 10 public ATS platforms in one normalized schema, including Workday, Greenhouse, Lever, and Ashby. Start with a company name or enter an exact career-board URL. For Workday, use the complete <code>myworkdayjobs.com</code> board URL; a company name alone may not identify the right board.</p>
+    <p>Begin with one company, a small row limit, and optional filters turned off. Add companies or filters one at a time after checking the output. Missing salary or posting-date fields can exclude results under strict filters, and row limits can defer older listings to later runs.</p>
+
+    <h2>Connect credentials safely</h2>
+    <p>Import the inactive workflow, add your own Apify Header Auth credential, and connect Google Sheets with your own OAuth account. The public workflow includes no credentials or private spreadsheet ID. Create a <code>Jobs</code> tab with the included headers, run manually, and inspect the reports and saved rows before activating the daily schedule.</p>
+    <ol class="steps">
+      <li>Paste the supplied header row into a new <code>Jobs</code> tab.</li>
+      <li>Import the inactive n8n starter and add your own Apify and Google credentials.</li>
+      <li>Run one small snapshot and inspect <code>HEALTH</code>, <code>COMPANIES</code>, and the Sheet.</li>
+      <li>Run again to check that stable IDs update without duplicate rows.</li>
+      <li>Enable the daily schedule only after your manual checks pass.</li>
+    </ol>
+
+    <h2>What the test showed—and what it did not</h2>
+    <p>In the verified Stripe demonstration, the Actor detected Greenhouse and returned a 10-job sample. Three runs each observed 10 jobs; the final Sheet contained 10 unique keys and no duplicates. The source reported 728 open jobs, so the demonstration was deliberately bounded and does not claim to list all 728. Repeat runs produced no newly observed IDs in that test window.</p>
+    <p><strong>First-seen time is not publication time.</strong> A job missing from a later bounded snapshot is not proof that it closed. The starter retains prior rows and does not detect closed positions. Verify important openings on the employer's source page.</p>
+
+    <h2>Try the workflow</h2>
+    <p>Connect your own accounts, begin with one career board, and verify the first run before enabling a schedule.</p>
+    <div class="links">
+      <a class="button" href="https://apify.com/datasmithlab/ats-jobs-scraper">Open the Apify Actor</a>
+      <a class="button secondary" href="https://github.com/Datasmith-lab/datasmithlab-ats-n8n/releases/latest/download/career-jobs-to-sheets-starter.zip">Download the n8n starter</a>
+      <a class="button secondary" href="https://github.com/Datasmith-lab/datasmithlab-ats-n8n#setup">Read the setup guide</a>
+    </div>
+  </article>
+  <footer>DataSmithLab · Public job listings only · Independent starter; not an official n8n directory listing.</footer>
+</main>
+</body>
+</html>
